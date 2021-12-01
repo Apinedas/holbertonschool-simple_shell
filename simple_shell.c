@@ -1,44 +1,41 @@
 #include "shell.h"
 
 /**
- * main- First version of simple shell
- * Return: Always 0
+ * init_shell - Fuction to execute simple shell
  */
 
-int main()
+void init_shell(void)
 {
-	char **argv, *input_line, *line, *prompt, *linetoargv;
+	char **argv, *desired_prompt, *line;
 	pid_t child_pid;
-	size_t linelen, aux;
-	int status, exeresult, i;
+	ssize_t linelen;
+	size_t aux;
+	int status, exeresult;
 
-	prompt = "MiniShell>";
+	desired_prompt = "MiniShell>";
+	argv = (char **)malloc(sizeof(char *));
+	if (argv == NULL)
+		exit(0);
 	while (1)
 	{
-		write(STDOUT_FILENO, prompt, _strlen(prompt));
-		linelen = getline(&input_line, &aux, stdin);
-		line = (char *)malloc((sizeof(char) * linelen) + 1);
+		prompt(desired_prompt);
+		line = (char *)malloc(sizeof(char) * 100);
 		if (line  == NULL)
-			write(STDOUT_FILENO, "Error on malloc\n", 17);
-		_strcpy(line, input_line);
-		linetoargv = strtok(line, " ");
-		for (i = 0; linetoargv; i++)
-		{
-			argv[i] = linetoargv;
-			linetoargv = strtok(NULL, " ");
-		}
-		argv[i] = NULL;
+			exit(0);
+		linelen = getline(&line, &aux, stdin);
+		if (linelen == -1)
+			break;
+		argv = linetoargv(line, argv, linelen);
 		child_pid = fork();
 		if (child_pid == 0)
 		{
 			exeresult = execve(argv[0], argv, NULL);
 			if (exeresult == -1)
-				printf("Error :(\n");
+				printf("Error: Command or file not found\n");
 		}
 		else
 			wait(&status);
 		if (isatty(0) != 1)
 			break;
 	}
-	return (0);
 }
