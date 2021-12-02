@@ -33,6 +33,39 @@ char *_getenv(char *name)
 }
 
 /**
+ * manage_path - Search for a file in the PATH
+ * @file: String to file to search
+ * Return: Path to file if found, or NULL if not found in any path
+ */
+
+char *manage_path(char *file)
+{
+	char *path, *direction;
+	struct stat st;
+	int pathlen, filelen, filestatus;
+
+	path = _getenv("PATH");
+	path = strtok(path, "=");
+	path = strtok(path, ":");
+	pathlen = _strlen(path);
+	filelen = _strlen(file);
+	while (path)
+	{
+		direction = (char *)malloc(sizeof(char) * (pathlen + filelen));
+		if (direction == NULL)
+			return (NULL);
+		direction = _strcpy(direction, path);
+		direction = _strcat(direction, file);
+		filestatus = stat(direction, &st);
+		if (filestatus == 0)
+			return (direction);
+		free(direction);
+		path = strtok(NULL, ":");
+	}
+	return (NULL);
+}
+
+/**
  * linetoargv - transforms a read line in an argv array
  * @line: Line to transform into argv
  * @argv: Array to put line into
@@ -42,9 +75,9 @@ char *_getenv(char *name)
 
 char **linetoargv(char *line, char **argv, ssize_t linelen)
 {
-	char *auxline/*, *path*/;
-	/*struct stat st;*/
-	int i/*, filestatus, pathlen*/;
+	char *auxline;
+	struct stat st;
+	int i, filestatus;
 
 	line[linelen - 1] = '\0';
 	auxline = strtok(line, " ");
@@ -54,30 +87,12 @@ char **linetoargv(char *line, char **argv, ssize_t linelen)
 		auxline = strtok(NULL, " ");
 	}
 	argv[i] = NULL;
-	/*filestatus = stat(argv[0], &st);
+	filestatus = stat(argv[0], &st);
 	if (filestatus == -1)
 	{
-		path = _getenv("PATH");
-		pathlen = _strlen(path);
-		auxline = (char *)malloc(sizeof(char) * pathlen);
-		if (auxline == NULL)
-			return (NULL);
-		auxline = _strcpy(auxline, path);
-		auxline = strtok(auxline, "=");
-		auxline = strtok(auxline, ":");
-		while (auxline)
-		{
-			_strcat(auxline, argv[0]);
-			filestatus = stat(auxline, &st);
-			if (filestatus == 0)
-			{
-				argv[0] = auxline;
-				break;
-			}
-			else
-				auxline = strtok(NULL, ":");
-		}
-		free(auxline);
-	}*/
+		auxline = manage_path(argv[0]);
+		if (auxline != NULL)
+			argv[0] = auxline;
+	}
 	return (argv);
 }
