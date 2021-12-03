@@ -44,9 +44,7 @@ char *manage_path(char *file)
 	int pathlen, filelen, filestatus;
 
 	pathlen = _strlen(_getenv("PATH"));
-	filelen = 0;
-	filestatus = 0;
-	path = malloc(sizeof(*path) * (pathlen + 1));
+	path = _calloc((pathlen + 1), sizeof(*path));
 	if (path == NULL)
 		return (NULL);
 	auxpath = path;
@@ -57,7 +55,7 @@ char *manage_path(char *file)
 	filelen = _strlen(file);
 	while (path)
 	{
-		direction = malloc(sizeof(*direction) * (pathlen + filelen + 1));
+		direction = _calloc((pathlen + filelen + 2), sizeof(*direction));
 		if (direction == NULL)
 			return (NULL);
 		_strcpy(direction, path);
@@ -70,7 +68,7 @@ char *manage_path(char *file)
 		filestatus = stat(direction, &st);
 		if (filestatus == 0)
 		{
-			free (auxpath);
+			free(auxpath);
 			return (direction);
 		}
 		free(direction);
@@ -104,11 +102,12 @@ char **linetoargv(char *line, char **argv, ssize_t linelen)
 	}
 	argv[i] = NULL;
 	filestatus = stat(argv[0], &st);
-	if (filestatus == -1)
-	{
-		auxline = manage_path(argv[0]);
-		if (auxline != NULL)
-			argv[0] = auxline;
-	}
+	if (filestatus == 0)
+		return (argv);
+	auxline = manage_path(argv[0]);
+	if (auxline != NULL)
+		argv[0] = auxline;
+	else
+		argv[0] = NULL;
 	return (argv);
 }

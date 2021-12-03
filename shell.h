@@ -16,6 +16,7 @@ char *_strcpy(char *dest, char *src);
 char *_strcat(char *dest, char *src);
 int _strcmp(char *s1, char *s2);
 int count_words(char *s);
+void *_calloc(unsigned int nmemb, unsigned int size);
 extern char **environ;
 
 #endif

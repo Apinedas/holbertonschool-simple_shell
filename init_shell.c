@@ -6,22 +6,23 @@
 
 int init_shell(void)
 {
-	char **argv, *prompt, *line;
+	char **argv, *prompt, *line, *error;
 	pid_t child_pid;
 	ssize_t linelen;
 	size_t aux;
-	int status, exeresult, argc;
+	int status, argc = 0;
 
 	aux = 1;
 	linelen = 0;
-	argc = 0;
 	prompt = "($)";
+	error = "Error: Command not foud\n";
 	while (1)
 	{
 		line = malloc(sizeof(*line) * 100);
 		if (line == NULL)
 			return (1);
-		write(STDOUT_FILENO, prompt, _strlen(prompt));
+		if (isatty(0) == 1)
+			write(STDOUT_FILENO, prompt, _strlen(prompt));
 		linelen = getline(&line, &aux, stdin);
 		if (linelen == -1)
 		{
@@ -36,17 +37,24 @@ int init_shell(void)
 			return (1);
 		}
 		argv = linetoargv(line, argv, linelen);
-		child_pid = fork();
-		if (child_pid == 0)
+		if (argv[0] != NULL)
 		{
-			exeresult = execve(argv[0], argv, NULL);
-			if (exeresult == -1)
-				printf("Error: Command or file not found\n");
+			child_pid = fork();
+			if (child_pid == 0)
+				execve(argv[0], argv, NULL);
+			else
+				wait(&status);
+			free(line);
+			if (argv[0] != line)
+				free(argv[0]);
+			free(argv);
 		}
 		else
-			wait(&status);
-		free(line);
-		free(argv);
+		{
+			write(STDOUT_FILENO, error, _strlen(error));
+			free(line);
+			free(argv);
+		}
 		if (isatty(0) != 1)
 			break;
 	}
