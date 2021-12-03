@@ -13,7 +13,7 @@ void init_shell(void)
 	int status, exeresult;
 
 	desired_prompt = "MiniShell>";
-	argv = (char **)malloc(sizeof(char *));
+	argv = (char **)malloc(sizeof(char *) * 1024);
 	if (argv == NULL)
 		exit(0);
 	while (1)
