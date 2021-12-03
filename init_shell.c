@@ -4,27 +4,37 @@
  * init_shell - Fuction to execute simple shell
  */
 
-void init_shell(void)
+int init_shell(void)
 {
-	char **argv, *desired_prompt, *line;
+	char **argv, *prompt, *line;
 	pid_t child_pid;
 	ssize_t linelen;
 	size_t aux;
-	int status, exeresult;
+	int status, exeresult, argc;
 
-	desired_prompt = "MiniShell>";
-	argv = (char **)malloc(sizeof(char *));
-	if (argv == NULL)
-		exit(0);
+	aux = 1;
+	linelen = 0;
+	argc = 0;
+	prompt = "($)";
 	while (1)
 	{
-		prompt(desired_prompt);
-		line = (char *)malloc(sizeof(char) * 100);
-		if (line  == NULL)
-			exit(0);
+		line = malloc(sizeof(*line) * 100);
+		if (line == NULL)
+			return (1);
+		write(STDOUT_FILENO, prompt, _strlen(prompt));
 		linelen = getline(&line, &aux, stdin);
 		if (linelen == -1)
-			break;
+		{
+			free(line);
+			return (2);
+		}
+		argc = count_words(line);
+		argv = malloc(sizeof(*argv) * (argc + 2));
+		if (argv == NULL)
+		{
+			free(line);
+			return (1);
+		}
 		argv = linetoargv(line, argv, linelen);
 		child_pid = fork();
 		if (child_pid == 0)
@@ -35,7 +45,10 @@ void init_shell(void)
 		}
 		else
 			wait(&status);
+		free(line);
+		free(argv);
 		if (isatty(0) != 1)
 			break;
 	}
+	return (0);
 }

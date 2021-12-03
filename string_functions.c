@@ -13,6 +13,8 @@ int _strlen(char *s)
 
 	i = 0;
 	len = 0;
+	if (s == NULL)
+		return (len);
 	while (*(s + i) != '\0')
 	{
 		len = len + 1;
@@ -87,6 +89,27 @@ int _strcmp(char *s1, char *s2)
 			ret = *(s1 + i) - *(s2 + i);
 			break;
 		}
+	}
+	return (ret);
+}
+
+/**
+ * count_words - Count words of a string, and words are separated by spaces
+ * @s: String to count words
+ * Return: Number of words
+ */
+
+int count_words(char *s)
+{
+	int ret, i;
+
+	ret = 0;
+	if (s == NULL)
+		return (ret);
+	for (i = 0; s[i]; i++)
+	{
+		if (s[i] == ' ')
+			ret++;
 	}
 	return (ret);
 }
