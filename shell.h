@@ -1,6 +1,8 @@
 #ifndef SHELL_H
 #define SHELL_H
 
+/* libraries */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -8,6 +10,22 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+
+/* macros */
+
+#define ISATTYOUT \
+do {\
+	if (isatty(0) == 0)\
+		break;\
+} while (0)
+
+#define ISATTYPROMPT(PROMPT, LEN) \
+do {\
+	if (isatty(0) == 1)\
+		write(STDOUT_FILENO, (PROMPT), (LEN));\
+} while (0)
+
+/* functions */
 
 int init_shell(void);
 char **linetoargv(char *line, char **argv, ssize_t linelen);

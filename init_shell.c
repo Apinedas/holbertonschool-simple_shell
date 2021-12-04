@@ -10,10 +10,9 @@ int init_shell(void)
 	pid_t child_pid;
 	ssize_t linelen;
 	size_t aux;
-	int status, argc = 0;
+	int status, argc;
 
 	aux = 1;
-	linelen = 0;
 	prompt = "($)";
 	error = "Error: Command not foud\n";
 	while (1)
@@ -21,9 +20,13 @@ int init_shell(void)
 		line = malloc(sizeof(*line) * 100);
 		if (line == NULL)
 			return (1);
-		if (isatty(0) == 1)
-			write(STDOUT_FILENO, prompt, _strlen(prompt));
+		ISATTYPROMPT(prompt, _strlen(prompt));
 		linelen = getline(&line, &aux, stdin);
+		if (linelen == 1)
+		{
+			free(line);
+			continue;
+		}
 		if (linelen == -1)
 		{
 			free(line);
@@ -41,7 +44,7 @@ int init_shell(void)
 		{
 			child_pid = fork();
 			if (child_pid == 0)
-				execve(argv[0], argv, NULL);
+				execve(argv[0], argv, environ);
 			else
 				wait(&status);
 			free(line);
@@ -55,8 +58,7 @@ int init_shell(void)
 			free(line);
 			free(argv);
 		}
-		if (isatty(0) != 1)
-			break;
+		ISATTYOUT;
 	}
 	return (0);
 }
