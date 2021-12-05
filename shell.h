@@ -25,6 +25,33 @@ do {\
 		write(STDOUT_FILENO, (PROMPT), (LEN));\
 } while (0)
 
+#define FREECONT(LINE) \
+do {\
+	free(LINE);\
+	continue;\
+} while (0)
+
+#define FREERET(LINE, R) \
+do {\
+	free(LINE);\
+	return (R);\
+} while (0)
+
+#define FREEWRITE(ERROR, LINE, ARGV) \
+do {\
+	write(STDOUT_FILENO, (ERROR), _strlen(ERROR));\
+	free(ARGV);\
+	free(LINE);\
+} while (0)
+
+#define FREELAR(LINE, ARST, ARZ, AR) \
+do {\
+	free(LINE);\
+	if (ARST == 1)\
+		free(ARZ);\
+	free (AR);\
+} while (0)
+
 /* functions */
 
 int init_shell(void);

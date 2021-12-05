@@ -2,6 +2,7 @@
 
 /**
  * init_shell - Fuction to execute simple shell
+ * Return: 0 on success execution, 1 on malloc failure
  */
 
 int init_shell(void)
@@ -23,22 +24,13 @@ int init_shell(void)
 		ISATTYPROMPT(prompt, _strlen(prompt));
 		linelen = getline(&line, &aux, stdin);
 		if (linelen == 1)
-		{
-			free(line);
-			continue;
-		}
+			FREECONT(line);
 		else if (linelen == -1 || _strcmp(line, "exit\n") == 0)
-		{
-			free(line);
-			return (0);
-		}
+			FREERET(line, 0);
 		argc = count_words(line);
 		argv = malloc(sizeof(*argv) * (argc + 2));
 		if (argv == NULL)
-		{
-			free(line);
-			return (1);
-		}
+			FREERET(line, 1);
 		argvst = linetoargv(line, argv, linelen);
 		if (argvst >= 0)
 		{
@@ -47,17 +39,10 @@ int init_shell(void)
 				execve(argv[0], argv, environ);
 			else
 				wait(&status);
-			free(line);
-			if (argvst == 1)
-				free (argv[0]);
-			free(argv);
+			FREELAR(line, argvst, argv[0], argv);
 		}
 		else
-		{
-			write(STDOUT_FILENO, error, _strlen(error));
-			free(line);
-			free(argv);
-		}
+			FREEWRITE(error, line, argv);
 		ISATTYOUT;
 	}
 	return (0);
