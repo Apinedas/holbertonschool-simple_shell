@@ -28,7 +28,7 @@ do {\
 /* functions */
 
 int init_shell(void);
-char **linetoargv(char *line, char **argv, ssize_t linelen);
+int linetoargv(char *line, char **argv, ssize_t linelen);
 int _strlen(char *s);
 char *_strcpy(char *dest, char *src);
 char *_strcat(char *dest, char *src);

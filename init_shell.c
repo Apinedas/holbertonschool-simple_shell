@@ -10,7 +10,7 @@ int init_shell(void)
 	pid_t child_pid;
 	ssize_t linelen;
 	size_t aux;
-	int status, argc;
+	int status, argc, argvst;
 
 	aux = 1;
 	prompt = "($)";
@@ -27,10 +27,10 @@ int init_shell(void)
 			free(line);
 			continue;
 		}
-		if (linelen == -1)
+		else if (linelen == -1 || _strcmp(line, "exit\n") == 0)
 		{
 			free(line);
-			return (2);
+			return (0);
 		}
 		argc = count_words(line);
 		argv = malloc(sizeof(*argv) * (argc + 2));
@@ -39,8 +39,8 @@ int init_shell(void)
 			free(line);
 			return (1);
 		}
-		argv = linetoargv(line, argv, linelen);
-		if (argv[0] != NULL)
+		argvst = linetoargv(line, argv, linelen);
+		if (argvst >= 0)
 		{
 			child_pid = fork();
 			if (child_pid == 0)
@@ -48,8 +48,8 @@ int init_shell(void)
 			else
 				wait(&status);
 			free(line);
-			if (argv[0] != line)
-				free(argv[0]);
+			if (argvst == 1)
+				free (argv[0]);
 			free(argv);
 		}
 		else
