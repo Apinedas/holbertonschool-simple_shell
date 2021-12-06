@@ -24,6 +24,11 @@ int init_shell(void)
 		if (isatty(0) == 1)
 			write(STDOUT_FILENO, prompt, _strlen(prompt));
 		linelen = getline(&line, &aux, stdin);
+		if (linelen == 1)
+		{
+			free(line);
+			continue;
+		}
 		if (linelen == -1)
 		{
 			free(line);
@@ -55,8 +60,7 @@ int init_shell(void)
 			free(line);
 			free(argv);
 		}
-		if (isatty(0) != 1)
-			break;
+		ISATTY(1);
 	}
 	return (0);
 }
