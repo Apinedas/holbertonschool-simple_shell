@@ -63,4 +63,11 @@ int count_words(char *s);
 void *_calloc(unsigned int nmemb, unsigned int size);
 extern char **environ;
 
+#define ISATTY(N)\
+do {\
+	if (isatty(0) != (N))\
+		break;\
+} while (0)
+
+
 #endif
