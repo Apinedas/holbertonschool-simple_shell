@@ -11,7 +11,7 @@ int init_shell(void)
 	pid_t child_pid;
 	ssize_t linelen;
 	size_t aux;
-	int status, argc, argvst;
+	int status, argc, argvst, i;
 
 	aux = 1;
 	prompt = "($)";
@@ -24,13 +24,28 @@ int init_shell(void)
 		ISATTYPROMPT(prompt, _strlen(prompt));
 		linelen = getline(&line, &aux, stdin);
 		if (linelen == 1)
-			FREECONT(line);
+		{
+			free(line);
+			continue;
+		}
 		else if (linelen == -1 || _strcmp(line, "exit\n") == 0)
-			FREERET(line, 0);
+		{
+			free(line);
+			return (0);
+		}
+		else if (_strcmp(line, "env\n") == 0)
+		{
+			ENVBUILTIN(environ, line, i);
+			free(line);
+			continue;
+		}
 		argc = count_words(line);
 		argv = malloc(sizeof(*argv) * (argc + 2));
 		if (argv == NULL)
-			FREERET(line, 1);
+		{
+			free(line);
+			return (1);
+		}
 		argvst = linetoargv(line, argv, linelen);
 		if (argvst >= 0)
 		{

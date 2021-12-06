@@ -1,5 +1,6 @@
 #ifndef SHELL_H
 #define SHELL_H
+#define _GNU_SOURCE
 
 /* libraries */
 
@@ -25,18 +26,6 @@ do {\
 		write(STDOUT_FILENO, (PROMPT), (LEN));\
 } while (0)
 
-#define FREECONT(LINE) \
-do {\
-	free(LINE);\
-	continue;\
-} while (0)
-
-#define FREERET(LINE, R) \
-do {\
-	free(LINE);\
-	return (R);\
-} while (0)
-
 #define FREEWRITE(ERROR, LINE, ARGV) \
 do {\
 	write(STDOUT_FILENO, (ERROR), _strlen(ERROR));\
@@ -49,7 +38,17 @@ do {\
 	free(LINE);\
 	if (ARST == 1)\
 		free(ARZ);\
-	free (AR);\
+	free(AR);\
+} while (0)
+
+#define ENVBUILTIN(ENV, LINE, I) \
+do {\
+	for (I = 0; ENV[I]; I++)\
+	{\
+		write(STDOUT_FILENO, ENV[I], _strlen(ENV[I]));\
+		write(STDOUT_FILENO, "\n", 1);\
+	} \
+	continue;\
 } while (0)
 
 /* functions */
