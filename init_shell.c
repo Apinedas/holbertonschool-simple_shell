@@ -39,14 +39,11 @@ int init_shell(void)
 			free(line);
 			continue;
 		}
-		if (linelen == -1)
+		else if (linelen == -1 || _strcmp(line, "exit\n") == 0)
 		{
 			free(line);
-			return (2);
+			return (0);
 		}
-			FREECONT(line);
-		else if (linelen == -1 || _strcmp(line, "exit\n") == 0)
-			FREERET(line, 0);
 		argc = count_words(line);
 		argv = malloc(sizeof(*argv) * (argc + 2));
 		if (argv == NULL)
@@ -70,9 +67,6 @@ int init_shell(void)
 			free(line);
 			free(argv);
 		}
-		ISATTY(1);
-=======
-			FREEWRITE(error, line, argv);
 		ISATTYOUT;
 	}
 	return (0);
