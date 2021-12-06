@@ -84,10 +84,11 @@ char *manage_path(char *file)
  * @line: Line to transform into argv
  * @argv: Array to put line into
  * @linelen: length of line to transform
- * Return: Argv filled with Modified line
+ * Return: 0 if argv was filled with no malloc,
+ * 1 if was filled with malloc, or -1 if was filled with NULL
  */
 
-char **linetoargv(char *line, char **argv, ssize_t linelen)
+int linetoargv(char *line, char **argv, ssize_t linelen)
 {
 	char *auxline;
 	struct stat st;
@@ -102,12 +103,14 @@ char **linetoargv(char *line, char **argv, ssize_t linelen)
 	}
 	argv[i] = NULL;
 	filestatus = stat(argv[0], &st);
-	if (filestatus == 0)
-		return (argv);
 	auxline = manage_path(argv[0]);
 	if (auxline != NULL)
+	{
 		argv[0] = auxline;
-	else
-		argv[0] = NULL;
-	return (argv);
+		return (1);
+	}
+	if (filestatus == 0)
+		return (0);
+	argv[0] = NULL;
+	return (-1);
 }

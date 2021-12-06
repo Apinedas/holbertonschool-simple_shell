@@ -2,6 +2,7 @@
 
 /**
  * init_shell - Fuction to execute simple shell
+ * Return: 0 on success execution, 1 on malloc failure
  */
 
 int init_shell(void)
@@ -10,10 +11,9 @@ int init_shell(void)
 	pid_t child_pid;
 	ssize_t linelen;
 	size_t aux;
-	int status, argc = 0;
+	int status, argc, argvst;
 
 	aux = 1;
-	linelen = 0;
 	prompt = "($)";
 	error = "Error: Command not foud\n";
 	while (1)
@@ -21,10 +21,10 @@ int init_shell(void)
 		line = malloc(sizeof(*line) * 100);
 		if (line == NULL)
 			return (1);
-		if (isatty(0) == 1)
-			write(STDOUT_FILENO, prompt, _strlen(prompt));
+		ISATTYPROMPT(prompt, _strlen(prompt));
 		linelen = getline(&line, &aux, stdin);
 		if (linelen == 1)
+<<<<<<< HEAD
 		{
 			free(line);
 			continue;
@@ -34,33 +34,37 @@ int init_shell(void)
 			free(line);
 			return (2);
 		}
+=======
+			FREECONT(line);
+		else if (linelen == -1 || _strcmp(line, "exit\n") == 0)
+			FREERET(line, 0);
+>>>>>>> 37059757e6e9037d6e194bd7ff022c32cbf34e25
 		argc = count_words(line);
 		argv = malloc(sizeof(*argv) * (argc + 2));
 		if (argv == NULL)
-		{
-			free(line);
-			return (1);
-		}
-		argv = linetoargv(line, argv, linelen);
-		if (argv[0] != NULL)
+			FREERET(line, 1);
+		argvst = linetoargv(line, argv, linelen);
+		if (argvst >= 0)
 		{
 			child_pid = fork();
 			if (child_pid == 0)
-				execve(argv[0], argv, NULL);
+				execve(argv[0], argv, environ);
 			else
 				wait(&status);
-			free(line);
-			if (argv[0] != line)
-				free(argv[0]);
-			free(argv);
+			FREELAR(line, argvst, argv[0], argv);
 		}
 		else
+<<<<<<< HEAD
 		{
 			write(STDOUT_FILENO, error, _strlen(error));
 			free(line);
 			free(argv);
 		}
 		ISATTY(1);
+=======
+			FREEWRITE(error, line, argv);
+		ISATTYOUT;
+>>>>>>> 37059757e6e9037d6e194bd7ff022c32cbf34e25
 	}
 	return (0);
 }

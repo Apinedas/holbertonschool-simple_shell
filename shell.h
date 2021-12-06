@@ -1,6 +1,8 @@
 #ifndef SHELL_H
 #define SHELL_H
 
+/* libraries */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -9,8 +11,51 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 
+/* macros */
+
+#define ISATTYOUT \
+do {\
+	if (isatty(0) == 0)\
+		break;\
+} while (0)
+
+#define ISATTYPROMPT(PROMPT, LEN) \
+do {\
+	if (isatty(0) == 1)\
+		write(STDOUT_FILENO, (PROMPT), (LEN));\
+} while (0)
+
+#define FREECONT(LINE) \
+do {\
+	free(LINE);\
+	continue;\
+} while (0)
+
+#define FREERET(LINE, R) \
+do {\
+	free(LINE);\
+	return (R);\
+} while (0)
+
+#define FREEWRITE(ERROR, LINE, ARGV) \
+do {\
+	write(STDOUT_FILENO, (ERROR), _strlen(ERROR));\
+	free(ARGV);\
+	free(LINE);\
+} while (0)
+
+#define FREELAR(LINE, ARST, ARZ, AR) \
+do {\
+	free(LINE);\
+	if (ARST == 1)\
+		free(ARZ);\
+	free (AR);\
+} while (0)
+
+/* functions */
+
 int init_shell(void);
-char **linetoargv(char *line, char **argv, ssize_t linelen);
+int linetoargv(char *line, char **argv, ssize_t linelen);
 int _strlen(char *s);
 char *_strcpy(char *dest, char *src);
 char *_strcat(char *dest, char *src);
