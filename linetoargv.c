@@ -104,11 +104,13 @@ int linetoargv(char *line, char **argv, ssize_t linelen)
 	argv[i] = NULL;
 	filestatus = stat(argv[0], &st);
 	auxline = manage_path(argv[0]);
-	if (auxline != NULL)
+	if (auxline != NULL && argv[0][0] != '.')
 	{
 		argv[0] = auxline;
 		return (1);
 	}
+	if (auxline != NULL)
+		free(auxline);
 	if (filestatus == 0)
 		return (0);
 	argv[0] = NULL;
