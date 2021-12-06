@@ -24,7 +24,7 @@ int init_shell(void)
 		ISATTYPROMPT(prompt, _strlen(prompt));
 		linelen = getline(&line, &aux, stdin);
 		if (linelen == 1)
-<<<<<<< HEAD
+	 HEAD
 		{
 			free(line);
 			continue;
@@ -38,7 +38,7 @@ int init_shell(void)
 			FREECONT(line);
 		else if (linelen == -1 || _strcmp(line, "exit\n") == 0)
 			FREERET(line, 0);
->>>>>>> 37059757e6e9037d6e194bd7ff022c32cbf34e25
+	37059757e6e9037d6e194bd7ff022c32cbf34e25
 		argc = count_words(line);
 		argv = malloc(sizeof(*argv) * (argc + 2));
 		if (argv == NULL)
