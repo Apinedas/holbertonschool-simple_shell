@@ -5,14 +5,14 @@
  * Return: Always 0
  */
 
-int main(void)
+int main(int argc __attribute__((unused)), char *argv[])
 {
-	char *prompt, *error;
+	char *prompt;
 	size_t aux;
 
 	prompt = "($)";
-	error = "Error: Command not found\n";
 	aux = 1;
-	init_shell(prompt, error, aux);
+	init_shell(prompt, argv[0], aux);
 	return (0);
 }
+

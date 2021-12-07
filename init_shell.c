@@ -22,12 +22,12 @@ int execute(char **argv)
 /**
  * init_shell - Fuction to execute simple shell
  * @prompt: Prompt to print
- * @error: Error to print when command not found
+ * @sh_command: command used to execute the shell
  * @aux: Auxiliar size_t to getline
  * Return: 0 on success execution, 1 on malloc failure
  */
 
-int init_shell(char *prompt, char *error, size_t aux)
+int init_shell(char *prompt, char *sh_command, size_t aux)
 {
 	char **argv, *line;
 	pid_t child_pid;
@@ -63,7 +63,7 @@ int init_shell(char *prompt, char *error, size_t aux)
 			FREELAR(line, argvst, argv[0], argv);
 		}
 		else
-			FREEWRITE(error, line, argv);
+			FREEWRITE(sh_command, line, argv);
 		ISATTYOUT;
 	}
 	free(line);

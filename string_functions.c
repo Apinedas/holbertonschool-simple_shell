@@ -1,4 +1,4 @@
-#include "shell.h"
+#include "main.h"
 
 /**
  * _strlen - returns the length of a string.
@@ -13,41 +13,12 @@ int _strlen(char *s)
 
 	i = 0;
 	len = 0;
-	if (s == NULL)
-		return (len);
 	while (*(s + i) != '\0')
 	{
 		len = len + 1;
 		i++;
 	}
 	return (len);
-}
-
-/**
- * _strcat - concatenates two strings.
- * @dest: Pointer to destination string
- * @src: Pointer to source string
- * Return: Pointer to resulting string dest
- */
-
-char *_strcat(char *dest, char *src)
-{
-	int lendest;
-	int lensrc;
-	int lenfdest;
-	int i;
-
-	lendest = _strlen(dest);
-	lensrc = _strlen(src);
-	lenfdest = lendest + lensrc;
-	i = 0;
-	while (lendest <= lenfdest)
-	{
-		*(dest + lendest) = *(src + i);
-		lendest++;
-		i++;
-	}
-	return (dest);
 }
 
 /**
@@ -70,47 +41,61 @@ char *_strcpy(char *dest, char *src)
 }
 
 /**
- * _strcmp - compares 2 strings
- * @s1: Pointer to first string
- * @s2: Pointer to second string
- * Return: The difference between the 2 first different characters in ASCII
+ * rev_string - reverses a string.
+ * @s: Pointer to string to reverse
+ * Return: Always 0
  */
 
-int _strcmp(char *s1, char *s2)
+void rev_string(char *s)
 {
 	int i;
-	int ret;
+	int j;
+	char c;
 
-	ret = 0;
-	for (i = 0 ; *(s1 + i) != '\0' ; i++)
+	i = _strlen(s) - 1;
+	j = 0;
+	while (i >= j)
 	{
-		if (*(s1 + i) != *(s2 + i))
-		{
-			ret = *(s1 + i) - *(s2 + i);
-			break;
-		}
+		c = *(s + j);
+		*(s + j) = *(s + i);
+		*(s + i) = c;
+		i = i - 1;
+		j++;
 	}
-	return (ret);
 }
 
 /**
- * count_words - Count words of a string, and words are separated by spaces
- * @s: String to count words
- * Return: Number of words
+ * rot13 - encodes a string using rot13.
+ * @s: String to encode
+ * Return: Pointer to encoded string
  */
 
-int count_words(char *s)
+char *rot13(char *s)
 {
-	int ret, i;
+	char ch[53] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
+		'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
+		'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
+		'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
+		'v', 'w', 'x', 'y', 'z'};
+	char ds[53] = {'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
+		'Y', 'Z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+		'K', 'L', 'M', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+		'w', 'x', 'y', 'z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+		'i', 'j', 'k', 'l', 'm'};
+	int i;
+	int j;
 
-	ret = 0;
-	if (s == NULL)
-		return (ret);
-	for (i = 0; s[i]; i++)
+	for (i = 0 ; (*(s + i) != '\0') ; i++)
 	{
-		if (s[i] == ' ')
-			ret++;
+		for (j = 0 ; (*(ch + j) != '\0') ; j++)
+		{
+			if (*(s + i) == *(ch + j))
+			{
+				*(s + i) = *(ds + j);
+				break;
+			}
+		}
+		j = 0;
 	}
-	return (ret);
+	return (s);
 }
-

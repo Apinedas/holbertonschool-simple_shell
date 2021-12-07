@@ -6,11 +6,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+#include "main.h"
 
 /* macros */
 
@@ -26,9 +26,9 @@ do {\
 		write(STDOUT_FILENO, (PROMPT), (LEN));\
 } while (0)
 
-#define FREEWRITE(ERROR, LINE, ARGV) \
+#define FREEWRITE(SH_COMMAND, LINE, ARGV) \
 do {\
-	write(STDOUT_FILENO, (ERROR), _strlen(ERROR));\
+	_printf("%s: 1: %s: not found\n", SH_COMMAND, LINE);\
 	free(ARGV);\
 	free(LINE);\
 } while (0)
