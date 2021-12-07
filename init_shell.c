@@ -10,7 +10,7 @@ int execute(char **argv)
 {
 	int i;
 
-	if (_strstr(argv[0], "env") != NULL)
+	if (_strcmp(argv[0], "env") == 0)
 	{
 		ENVBUILTIN(environ, i);
 		return (0);
@@ -36,10 +36,10 @@ int init_shell(char *prompt, char *error, size_t aux)
 
 	while (1)
 	{
+		ISATTYPROMPT(prompt, _strlen(prompt));
 		line = malloc(sizeof(*line) * 100);
 		if (line == NULL)
 			return (1);
-		ISATTYPROMPT(prompt, _strlen(prompt));
 		linelen = getline(&line, &aux, stdin);
 		if (linelen == 1)
 		{
@@ -47,17 +47,11 @@ int init_shell(char *prompt, char *error, size_t aux)
 			continue;
 		}
 		if (linelen == -1 || _strcmp(line, "exit\n") == 0)
-		{
-			free(line);
-			return (0);
-		}
+			break;
 		argc = count_words(line);
 		argv = malloc(sizeof(*argv) * (argc + 2));
 		if (argv == NULL)
-		{
-			free(line);
-			return (1);
-		}
+			break;
 		argvst = linetoargv(line, argv, linelen);
 		if (argvst >= 0)
 		{
@@ -72,5 +66,6 @@ int init_shell(char *prompt, char *error, size_t aux)
 			FREEWRITE(error, line, argv);
 		ISATTYOUT;
 	}
+	free(line);
 	return (0);
 }
