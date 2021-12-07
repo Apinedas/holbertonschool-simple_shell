@@ -13,6 +13,8 @@ int _strlen(char *s)
 
 	i = 0;
 	len = 0;
+	if (!s)
+		return (len);
 	while (*(s + i) != '\0')
 	{
 		len = len + 1;
