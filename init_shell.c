@@ -1,21 +1,39 @@
 #include "shell.h"
 
 /**
+ * execute - Execute function for simple_shell
+ * @argv: Argument vector
+ * Return: 0 on succes execution, -1 on exit
+ */
+
+int execute(char **argv)
+{
+	int i;
+
+	if (_strstr(argv[0], "env") != NULL)
+	{
+		ENVBUILTIN(environ, i);
+		return (0);
+	}
+	execve(argv[0], argv, environ);
+	return (0);
+}
+
+/**
  * init_shell - Fuction to execute simple shell
+ * @prompt: Prompt to print
+ * @error: Error to print when command not found
+ * @aux: Auxiliar size_t to getline
  * Return: 0 on success execution, 1 on malloc failure
  */
 
-int init_shell(void)
+int init_shell(char *prompt, char *error, size_t aux)
 {
-	char **argv, *prompt, *line, *error;
+	char **argv, *line;
 	pid_t child_pid;
 	ssize_t linelen;
-	size_t aux;
-	int status, argc, argvst, i;
+	int status, argc, argvst;
 
-	aux = 1;
-	prompt = "($)";
-	error = "Error: Command not foud\n";
 	while (1)
 	{
 		line = malloc(sizeof(*line) * 100);
@@ -28,18 +46,7 @@ int init_shell(void)
 			free(line);
 			continue;
 		}
-		else if (linelen == -1 || _strcmp(line, "exit\n") == 0)
-		{
-			free(line);
-			return (0);
-		}
-		else if (_strcmp(line, "env\n") == 0)
-		{
-			ENVBUILTIN(environ, line, i);
-			free(line);
-			continue;
-		}
-		else if (linelen == -1 || _strcmp(line, "exit\n") == 0)
+		if (linelen == -1 || _strcmp(line, "exit\n") == 0)
 		{
 			free(line);
 			return (0);
@@ -56,17 +63,13 @@ int init_shell(void)
 		{
 			child_pid = fork();
 			if (child_pid == 0)
-				execve(argv[0], argv, environ);
+				execute(argv);
 			else
 				wait(&status);
 			FREELAR(line, argvst, argv[0], argv);
 		}
 		else
-		{
-			write(STDOUT_FILENO, error, _strlen(error));
-			free(line);
-			free(argv);
-		}
+			FREEWRITE(error, line, argv);
 		ISATTYOUT;
 	}
 	return (0);

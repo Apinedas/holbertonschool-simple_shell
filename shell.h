@@ -41,25 +41,25 @@ do {\
 	free(AR);\
 } while (0)
 
-#define ENVBUILTIN(ENV, LINE, I) \
+#define ENVBUILTIN(ENV, I) \
 do {\
 	for (I = 0; ENV[I]; I++)\
 	{\
 		write(STDOUT_FILENO, ENV[I], _strlen(ENV[I]));\
 		write(STDOUT_FILENO, "\n", 1);\
 	} \
-	continue;\
 } while (0)
 
 /* functions */
 
-int init_shell(void);
+int init_shell(char *prompt, char *error, size_t aux);
 int linetoargv(char *line, char **argv, ssize_t linelen);
 int _strlen(char *s);
 char *_strcpy(char *dest, char *src);
 char *_strcat(char *dest, char *src);
 int _strcmp(char *s1, char *s2);
 int count_words(char *s);
+char *_strstr(char *haystack, char *needle);
 void *_calloc(unsigned int nmemb, unsigned int size);
 extern char **environ;
 

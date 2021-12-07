@@ -80,6 +80,22 @@ char *manage_path(char *file)
 }
 
 /**
+ * replacetabs - Replaces tabs with spaces on a line
+ * @line: Line to replace tabs in
+ */
+
+void replacetabs(char *line)
+{
+	int i;
+
+	for (i = 0; line[i]; i++)
+	{
+		if (line[i] == '\t')
+			line[i] = ' ';
+	}
+}
+
+/**
  * linetoargv - transforms a read line in an argv array
  * @line: Line to transform into argv
  * @argv: Array to put line into
@@ -95,6 +111,7 @@ int linetoargv(char *line, char **argv, ssize_t linelen)
 	int i, filestatus;
 
 	line[linelen - 1] = '\0';
+	replacetabs(line);
 	auxline = strtok(line, " ");
 	for (i = 0; auxline; i++)
 	{
@@ -111,7 +128,7 @@ int linetoargv(char *line, char **argv, ssize_t linelen)
 	}
 	if (auxline != NULL)
 		free(auxline);
-	if (filestatus == 0)
+	if (filestatus == 0 || _strcmp(argv[0], "exit") == 0)
 		return (0);
 	argv[0] = NULL;
 	return (-1);
