@@ -132,6 +132,5 @@ int linetoargv(char *line, char **argv, ssize_t linelen)
 	if (filestatus == 0 || _strcmp(argv[0], "exit") == 0 ||
 			 _strcmp(argv[0], "env") == 0)
 		return (0);
-	argv[0] = NULL;
 	return (-1);
 }

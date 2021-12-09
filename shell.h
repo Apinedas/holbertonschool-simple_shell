@@ -26,19 +26,21 @@ do {\
 		write(STDOUT_FILENO, (PROMPT), (LEN));\
 } while (0)
 
-#define FREEWRITE(LINE, ARGV) \
+#define FREEWRITE(LINE, ARGV, ERRORLINE) \
 do {\
-	perror(LINE);\
+	write(STDERR_FILENO, ERRORLINE, _strlen(ERRORLINE));\
+	free(ERRORLINE);\
 	free(ARGV);\
 	free(LINE);\
 } while (0)
 
-#define FREELAR(LINE, ARST, ARZ, AR) \
+#define FREELAR(LINE, ARST, ARZ, AR, ERRORLINE) \
 do {\
 	free(LINE);\
 	if (ARST == 1)\
 		free(ARZ);\
 	free(AR);\
+	free(ERRORLINE);\
 } while (0)
 
 #define ENVBUILTIN(ENV, I) \
