@@ -29,9 +29,9 @@ int execute(char **argv)
 
 int init_shell(char *prompt, char *sh_command, size_t aux)
 {
-	char **argv, *line;
+	char **argv, *line = NULL;
 	pid_t child_pid;
-	ssize_t linelen;
+	ssize_t linelen = 0;
 	int status, argc, argvst;
 
 	while (1)
