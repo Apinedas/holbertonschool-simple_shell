@@ -27,17 +27,17 @@ int execute(char **argv)
  * Return: 0 on success execution, 1 on malloc failure
  */
 
-int init_shell(char *prompt, char *sh_command, size_t aux)
+int init_shell(char *prompt, char *sh_command __attribute__((unused)), size_t aux)
 {
 	char **argv, *line = NULL;
 	pid_t child_pid;
 	ssize_t linelen = 0;
-	int status, argc, argvst;
+	int status, argvst, argc = 0;
 
 	while (1)
 	{
 		ISATTYPROMPT(prompt, _strlen(prompt));
-		line = malloc(sizeof(*line) * 100);
+		line = _calloc(100, sizeof(*line));
 		if (line == NULL)
 			return (1);
 		linelen = getline(&line, &aux, stdin);
@@ -49,7 +49,7 @@ int init_shell(char *prompt, char *sh_command, size_t aux)
 		}
 		if (linelen == -1 || _strcmp(line, "exit\n") == 0)
 			break;
-		argv = malloc(sizeof(*argv) * (argc + 2));
+		argv = _calloc((argc + 2), sizeof(*argv));
 		if (argv == NULL)
 			break;
 		argvst = linetoargv(line, argv, linelen);
@@ -63,7 +63,7 @@ int init_shell(char *prompt, char *sh_command, size_t aux)
 			FREELAR(line, argvst, argv[0], argv);
 		}
 		else
-			FREEWRITE(sh_command, line, argv);
+			FREEWRITE(line, argv);
 		ISATTYOUT;
 	}
 	free(line);

@@ -26,9 +26,9 @@ do {\
 		write(STDOUT_FILENO, (PROMPT), (LEN));\
 } while (0)
 
-#define FREEWRITE(SH_COMMAND, LINE, ARGV) \
+#define FREEWRITE(LINE, ARGV) \
 do {\
-	perror(SH_COMMAND);\
+	perror(LINE);\
 	free(ARGV);\
 	free(LINE);\
 } while (0)
