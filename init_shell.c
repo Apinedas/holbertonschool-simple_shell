@@ -41,14 +41,14 @@ int init_shell(char *prompt, char *sh_command, size_t aux)
 		if (line == NULL)
 			return (1);
 		linelen = getline(&line, &aux, stdin);
-		if (linelen == 1)
+		argc = count_words(line);
+		if (linelen == 1 || argc == linelen - 1)
 		{
 			free(line);
 			continue;
 		}
 		if (linelen == -1 || _strcmp(line, "exit\n") == 0)
 			break;
-		argc = count_words(line);
 		argv = malloc(sizeof(*argv) * (argc + 2));
 		if (argv == NULL)
 			break;
