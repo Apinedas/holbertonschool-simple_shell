@@ -44,7 +44,7 @@ $ ./hsh
 ```
 When `simple_shel` is run, command line are written as any other line interpreter. Hsh will attempt to execute the program name (searching into the PATH environment variable) with the arguments specified by [options]. There's a limit of 100 characters per line, including the new line character. All the tabs characters (\t) that are found in the line are removed and are not considered in the code.
 ### Files
-The `_printf`function, available on the author profile, is used at hsh. So a copy of all of the files needed to `_printf`correct operation is on this repository.  The files needed to `hsh`correct functioning and their description are listed below.
+The files needed to `hsh`correct functioning and their description are listed below.
 |File| Description |
 |--|--|
 |`calloc.c`|recreation of the calloc stdlib.h function |
