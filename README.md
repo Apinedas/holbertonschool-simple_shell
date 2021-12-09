@@ -7,32 +7,7 @@
 `simple_shell` was coded on `Ubuntu 20.04.3 LTS` machine, using   the  `C programming language`. Test wer compiled using `gcc` compiler version 9.3.0
 
 ## Flowchart
-
-```mermaid
-graph TB
-A((Start)) -->B{STDIN Is a tty?}
-    B -- yes --> C[Display prompt]
-    B -- no --> D[Read the line from STDIN]
-    C --> D
-    D --> E[Tokenize the line into argv array]
-    E --> F{"Does file argv[0] exist?"}
-    F -- yes --> G[Execution]
-    F -- no --> H["Search argv[0] on a PATH directory"]
-    H --> J{"Was argv[0] found on the PATH directory?"}
-    J -- no --> K{"Are there more directories on PATH?"}
-    K -- yes --> H
-    K -- no --> L{"Is argv[0] a built-in?"}
-    L -- yes --> Q["Built-in execution"]
-    L -- no --> M{"Is argv[0] an exit signal?"}
-    M -- yes --> N["End the shell"]
-    M -- no --> O["Print error"]
-    J -- yes --> G
-    G --> P{"Is STDIN a tty?"}
-    P -- yes --> C
-    P -- no --> N
-    O --> P
-    Q --> P
-```
+![Designed with lucid.app](https://user-images.githubusercontent.com/91083840/145311672-53ee1362-943a-4a60-896b-08057bfcdcfe.png)
 
 ## Usage
 
