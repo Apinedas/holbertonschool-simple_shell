@@ -120,7 +120,8 @@ int linetoargv(char *line, char **argv, ssize_t linelen)
 	}
 	argv[i] = NULL;
 	filestatus = stat(argv[0], &st);
-	auxline = manage_path(argv[0]);
+	if (_getenv("PATH") != NULL)
+		auxline = manage_path(argv[0]);
 	if (auxline != NULL && argv[0][0] != '.' && _strcmp(argv[0], "env") != 0)
 	{
 		argv[0] = auxline;
