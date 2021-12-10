@@ -44,15 +44,6 @@ do {\
 	free(ERRORLINE);\
 } while (0)
 
-#define ENVBUILTIN(ENV, I) \
-do {\
-	for (I = 0; ENV[I]; I++)\
-	{\
-		write(STDOUT_FILENO, ENV[I], _strlen(ENV[I]));\
-		write(STDOUT_FILENO, "\n", 1);\
-	} \
-} while (0)
-
 #define ISATTY(N)\
 do {\
 	if (isatty(0) != (N))\
@@ -69,6 +60,7 @@ char *_strcat(char *dest, char *src);
 int _strcmp(char *s1, char *s2);
 int count_words(char *s);
 void *_calloc(unsigned int nmemb, unsigned int size);
+void env_builtin(void);
 extern char **environ;
 
 #endif

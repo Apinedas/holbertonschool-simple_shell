@@ -8,11 +8,9 @@
 
 int execute(char **argv)
 {
-	int i;
-
 	if (_strcmp(argv[0], "env") == 0)
 	{
-		ENVBUILTIN(environ, i);
+		env_builtin();
 		return (0);
 	}
 	execve(argv[0], argv, environ);
@@ -45,6 +43,24 @@ char *get_errorline(char *sh_command, char *line)
 	aux = &aux[_strlen(line)];
 	_strcpy(aux, ": not found\n");
 	return (ret);
+}
+
+/**
+ * env_builtin - prints the environment
+ */
+
+void env_builtin(void)
+{
+	int i;
+
+	if (environ)
+	{
+		for (i = 0; environ[i]; i++)
+		{
+			write(STDOUT_FILENO, environ[i], _strlen(environ[i]));
+			write(STDOUT_FILENO, "\n", 1);
+		}
+	}
 }
 
 /**
